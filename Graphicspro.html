@@ -1,0 +1,208 @@
+<html>
+<head>
+<script src="lib/three.min.js"></script>
+<script src="lib/OrbitControls.js"></script> 
+</head>
+<body onkeydown="KeyPressed(event)">
+<!-- My scene -->
+	<canvas id="scene"></canvas>
+<script>
+
+var ww = 1500,
+wh = 700;
+//pos=true;
+function init()
+{
+    renderer = new THREE.WebGLRenderer({canvas : document.getElementById('scene')});
+    renderer.setClearColor(0xffffff);
+    renderer.setSize(ww,wh);
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(50, ww/wh, 1, 10000 );
+	camera.position.set(0, 250, 700);
+	camera.lookAt(new THREE.Vector3(0,0,0));
+	scene.add(camera);
+
+    scene.add(camera);
+    //control = new THREE.OrbitControls( camera );
+
+    const loader = new THREE.TextureLoader();
+    scene.background = loader.load( 'background1.jpg' );
+
+
+
+    light = new THREE.DirectionalLight(0xffffff, 1);
+
+    light.position.set( 50, 250, 500 );
+
+    scene.add(light);
+    renderer.render(scene, camera);
+    createSphere();
+    createBox();
+    cube();
+
+    
+
+    };
+ /*   function cube()
+    {
+        var cubeGeometry = new THREE.BoxGeometry(30, 30, 30);
+            var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff2255});
+            var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+            cube.translateY(-8);
+            cube.translateX(-11.2);
+            cube.name = 'cube';
+            scene.add(cube);
+    }
+    */
+
+    function createBox()
+    {
+        cubes = new THREE.Object3D();
+
+geometry = new THREE.BoxGeometry(30,30,30);
+texture = new THREE.MeshLambertMaterial({color:0x00ff00 });
+var x = -5 , y=0, z = 0;
+//Generate 70 random cubes
+for(var i=0;i<4;i++)
+{
+   
+    cube1 = new THREE.Mesh(geometry, texture);
+    cube1.position.set(x,y,z);
+    if(i>=0)
+    {
+        x+=1; 
+        y+=10;
+        z+=140;
+        
+        camera.position.y=200;
+       // camera.position.x =10;
+    }
+
+   
+
+    cubes.add(cube1);
+}
+
+//Add my cubes in my scene
+scene.add(cubes);
+AnimateCubes();
+
+    };
+
+/*
+    var AnimateCubes = function() 
+    {
+    requestAnimationFrame(AnimateCubes);
+
+ 
+    renderer.render(scene,camera);
+
+    };
+    */
+
+
+   /* function moveCube(e) 
+        {
+        var moveDistance = 0.30;
+            var cube = scene.getObjectByName('cube');
+            if (e.keyCode == '37') 
+            {
+                // left arrow
+                cube.position.z += moveDistance;
+                cube.rotation.x += 0.15;
+            
+            } 
+            
+            else if (e.keyCode == '39')
+        
+            {
+                // right arrow
+                cube.position.z -= moveDistance;
+                cube.rotation.x-= 0.15;
+            } 
+        
+        
+        }
+        */
+        function render()
+        {
+            renderer.render(scene, camera);
+            // checkCollision();
+            requestAnimationFrame(render);
+        }
+        window.onload = init;
+        window.addEventListener("keydown", moveCube);
+
+
+
+        function createSphere()
+{
+    //control = new THREE.OrbitControls( camera );
+	sphereGeometry1 = new THREE.SphereGeometry(20, 20, 20);
+    sphereMaterial1 = new THREE.MeshBasicMaterial( {color:0xff2255} );
+    sphere1 = new THREE.Mesh( sphereGeometry1, sphereMaterial1 );
+    sphere1.position.set( 0,-390, 5);
+    scene.add(sphere1);
+   
+    
+    renderer.render(scene,camera);
+   
+};
+
+
+function KeyPressed (e)
+ {
+event.preventDefault();
+    
+switch(e.keyCode)
+    {
+		//Left key
+		case 37:
+            sphere1.position.x -= 10;
+            camera.position.x-=1;
+		break;
+		//Up key
+		case 38:
+             
+            sphere1.position.z -= 10;
+            camera.position.z +=-1;
+		break;
+		//Right key
+		case 39:
+            sphere1.position.x += 10;
+            camera.position.x+=1;
+		break;
+		//Down key
+		case 40:
+            sphere1.position.z += 10;
+            //camera.position.z -=-1;
+        break;
+        
+//------------------camera move---------------------
+		//A key
+		case 65:
+			camera.position.x -= 10;
+		break;
+		//W key
+		case 87:
+			camera.position.y += 10;
+		break;
+		//D key
+		case 68:
+			camera.position.x += 10;
+		break;
+		//S key
+		case 83:
+			camera.position.y -= 10;
+		break;
+    }
+   
+    
+renderer.render(scene,camera);
+ };
+
+    init();
+
+</script>
+</body>
