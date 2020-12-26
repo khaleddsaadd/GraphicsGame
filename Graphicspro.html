@@ -10,7 +10,6 @@
 
 var ww = 1500,
 wh = 700;
-//pos=true;
 function init()
 {
     renderer = new THREE.WebGLRenderer({canvas : document.getElementById('scene')});
@@ -38,59 +37,111 @@ function init()
     scene.add(light);
     renderer.render(scene, camera);
     createSphere();
-    createBox();
-    cube();
+    createBox1();
+    createBox2();
+    createBox3();
 
-    
-
+    //cube();
     };
- /*   function cube()
-    {
-        var cubeGeometry = new THREE.BoxGeometry(30, 30, 30);
-            var cubeMaterial = new THREE.MeshLambertMaterial({color: 0xff2255});
-            var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-            cube.translateY(-8);
-            cube.translateX(-11.2);
-            cube.name = 'cube';
-            scene.add(cube);
-    }
-    */
 
-    function createBox()
+
+    function createBox1()
     {
         cubes = new THREE.Object3D();
 
-geometry = new THREE.BoxGeometry(30,30,30);
-texture = new THREE.MeshLambertMaterial({color:0x00ff00 });
-var x = -5 , y=0, z = 0;
-//Generate 70 random cubes
-for(var i=0;i<4;i++)
-{
-   
-    cube1 = new THREE.Mesh(geometry, texture);
-    cube1.position.set(x,y,z);
-    if(i>=0)
-    {
-        x+=1; 
-        y+=10;
-        z+=140;
+        geometry = new THREE.BoxGeometry(30,30,30);
+        texture = new THREE.TextureLoader().load( '25649.jpg' );
+        materialtex = new THREE.MeshBasicMaterial( { map: texture } );
+        var x = -5 , y=0, z = 0;
+        for(var i=0;i<4;i++)
+        {
         
-        camera.position.y=200;
-       // camera.position.x =10;
-    }
+            cube1 = new THREE.Mesh(geometry, materialtex);
+            cube1.position.set(x,y,z);
+            if(i>=0)
+            {
+                x+=1; 
+                y+=10;
+                z+=140;
+                
+                camera.position.y=200;
+            // camera.position.x =10;
+            }
 
-   
+        
 
-    cubes.add(cube1);
-}
+            cubes.add(cube1);
+        }
 
-//Add my cubes in my scene
-scene.add(cubes);
-AnimateCubes();
-
+        scene.add(cubes);
+        //AnimateCubes();
     };
 
-/*
+    function createBox2()
+    {
+        cubes2 = new THREE.Object3D();
+
+        geometry = new THREE.BoxGeometry(30,30,30);
+        texture = new THREE.TextureLoader().load( '25649.jpg' );
+        materialtex = new THREE.MeshBasicMaterial( { map: texture } );       
+         var a = 35 , b=30, c = 0;
+        //Generate 70 random cubes
+        for(var i=0;i<4;i++)
+        {
+        
+            cube2 = new THREE.Mesh(geometry, materialtex);
+            cube2.position.set(a,b,c);
+            if(i>=0)
+            {
+                a+=1; 
+                b+=15;
+                c+=150;
+                
+                camera.position.y=200;
+            // camera.position.x =10;
+            }
+
+        
+
+            cubes2.add(cube2);
+        }
+
+        scene.add(cubes2);
+        //AnimateCubes();
+    };
+    function createBox3()
+    {
+        cubes3 = new THREE.Object3D();
+
+        geometry = new THREE.BoxGeometry(30,30,30);
+        texture = new THREE.TextureLoader().load( '25649.jpg' );
+        materialtex = new THREE.MeshBasicMaterial( { map: texture } );      
+          var u = -50 , w=20, v = 0;
+        //Generate 70 random cubes
+        for(var i=0;i<4;i++)
+        {
+        
+            cube3 = new THREE.Mesh(geometry, materialtex);
+            cube3.position.set(u,w,v);
+            if(i>=0)
+            {
+                u+=1; 
+                w+=5;
+                v+=150;
+                
+                camera.position.y=200;
+            // camera.position.x =10;
+            }
+
+        
+
+            cubes3.add(cube3);
+        }
+
+        scene.add(cubes3);
+        //AnimateCubes();
+    };
+
     var AnimateCubes = function() 
     {
     requestAnimationFrame(AnimateCubes);
@@ -99,41 +150,17 @@ AnimateCubes();
     renderer.render(scene,camera);
 
     };
-    */
+    
 
 
-   /* function moveCube(e) 
-        {
-        var moveDistance = 0.30;
-            var cube = scene.getObjectByName('cube');
-            if (e.keyCode == '37') 
-            {
-                // left arrow
-                cube.position.z += moveDistance;
-                cube.rotation.x += 0.15;
-            
-            } 
-            
-            else if (e.keyCode == '39')
-        
-            {
-                // right arrow
-                cube.position.z -= moveDistance;
-                cube.rotation.x-= 0.15;
-            } 
-        
-        
-        }
-        */
+  
         function render()
         {
             renderer.render(scene, camera);
             // checkCollision();
             requestAnimationFrame(render);
         }
-        window.onload = init;
-        window.addEventListener("keydown", moveCube);
-
+      
 
 
         function createSphere()
@@ -198,8 +225,8 @@ switch(e.keyCode)
 		break;
     }
    
-    
-renderer.render(scene,camera);
+   // removecube();
+    renderer.render(scene,camera);
  };
 
     init();
