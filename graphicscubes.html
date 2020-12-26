@@ -1,12 +1,15 @@
 <canvas id="scene"></canvas>
 <script src="lib/three.min.js"></script>
 <script src="lib/OrbitControls.js"></script>
+
 <script>
 
 var ww = 1800,
 wh = 700;
 var usePres = true;
-
+var scene;
+var cubearr = [];
+var k=0.02;
 function init()
 {
 
@@ -17,7 +20,7 @@ renderer.setSize(ww, wh);
 renderer.setClearColor(0xDDDDDD, 1);
 document.body.appendChild(renderer.domElement);
 
-var scene = new THREE.Scene();
+ scene = new THREE.Scene();
 
 var camera = new THREE.PerspectiveCamera(40, ww/wh);
 camera.position.z =  100;
@@ -54,10 +57,29 @@ const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
 const cube = new THREE.Mesh( geometry, material1 );
     cube.position.y = -20;
 scene.add( cube );
-    
 
-function render() {
+
+
+
+
+createCubes();
+
+function render() 
+{
     requestAnimationFrame(render);
+    for(var i=0; i<cubearr.length ;i++ )
+        {
+            if(i<5)
+            {
+                cubearr[i].position.y -= Math.random();
+            }
+            
+        
+            
+           
+
+        }
+        
     renderer.render(scene, camera);
 }
     function moveCube(e) 
@@ -96,6 +118,22 @@ function render() {
       window.addEventListener("keydown", moveCube);
 render();
 };
+
+function createCubes()
+{
+    var geometry2 = new THREE.BoxGeometry(5,5,5);
+    var material2 = new THREE.MeshLambertMaterial({
+        color: 0x00ff00 });
+    var max=48 , min=-48;
+    for (let i = 0; i < 100; i++) 
+    {
+        cubearr[i] = new THREE.Mesh(geometry2, material2);
+        cubearr[i].position.x =(Math.random() * (max - min)) + min;
+        cubearr[i].position.y = 60;
+        scene.add(cubearr[i]);
+    }
+
+}
     
 init();
     </script>
