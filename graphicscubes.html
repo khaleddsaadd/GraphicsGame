@@ -16,6 +16,7 @@ var cubearr = [];
 var k=0.02;
 var fo2=60;
 var count=0;
+var flag = true;
 function init()
 {
 
@@ -76,6 +77,11 @@ createCubes();
 
 function render() 
 {
+    if (flag == false)
+    {
+     console.log("pause")
+     return;   
+    }
     requestAnimationFrame(render);
     for(var i=0; i<cubearr.length ;i++ )
         {
@@ -118,7 +124,20 @@ function render()
          document.getElementById("myText").innerHTML = count;
                     
                 }
-        } 
+        }
+        else if(e.keyCode == '27')
+            {
+                if (flag)
+                    {
+                        flag = false;
+                    }
+                else
+                    {
+                        flag = true;
+                        render();
+                            
+                    }
+            }
        
        
     };
