@@ -14,7 +14,6 @@ var ww = 2000,
 wh = 700;
 var usePres = true;
 var scene;
-var cubearr = [];
 var k=0.02;
 var fo2=60;
 var count=0;
@@ -24,7 +23,7 @@ function init()
 
 
 
-var renderer = new THREE.WebGLRenderer({antialias:true});
+ renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(ww, wh);
 renderer.setClearColor(0xFFFFFF, 1);
 
@@ -41,32 +40,32 @@ camera.lookAt(new THREE.Vector3(0,0,0));
 scene.add(camera);
 
     
-    const light = new THREE.PointLight( 0xFFFFFF, 1, 10000 );
+     light = new THREE.PointLight( 0xFFFFFF, 1, 10000 );
 light.position.set( 0, 20, 50 );
     light.name = 'light';
 scene.add( light );
-    const loader = new THREE.CubeTextureLoader();
+     loader = new THREE.CubeTextureLoader();
 loader.setPath( 'C:/xampp/htdocs/graphics/' );
 
 
-    var texture1 = new THREE.TextureLoader().load('texturefloor.jpg');
+     texture1 = new THREE.TextureLoader().load('texturefloor.jpg');
 texture1.wrapS = THREE.RepeatWrapping;
 texture1.wrapT = THREE.RepeatWrapping;
 texture1.repeat.set( 100, 10 );
-var material1 = new THREE.MeshBasicMaterial( { map: texture1 } );
+ material1 = new THREE.MeshBasicMaterial( { map: texture1 } );
     
     
-    var texture2 = new THREE.TextureLoader().load('spheretex.jpg');
-    var material2 = new THREE.MeshBasicMaterial( { map: texture2 } );
-var sphereG =  new THREE.SphereGeometry(4, 100, 100, 0, Math.PI * 2, 0, Math.PI * 2);
+     texture2 = new THREE.TextureLoader().load('spheretex.jpg');
+     material2 = new THREE.MeshBasicMaterial( { map: texture2 } );
+ sphereG =  new THREE.SphereGeometry(4, 100, 100, 0, Math.PI * 2, 0, Math.PI * 2);
          spherem = new THREE.MeshLambertMaterial({color: 0xff2255});
          sphere = new THREE.Mesh(sphereG, material2);
     sphere.position.y = -13;
         sphere.name = 'sp';
         scene.add(sphere);
     
-    const geometry = new THREE.BoxGeometry( 100, 5, 10 );
-const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+     geometry = new THREE.BoxGeometry( 100, 5, 10 );
+ material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
  cube = new THREE.Mesh( geometry, material1 );
     cube.position.y = -20;
 scene.add( cube );
@@ -100,10 +99,10 @@ function render()
 
     function moveSphere(e) 
     {
-       var moveDistance = 0.30;
-        var sp = scene.getObjectByName('sp');
-        var cam = scene.getObjectByName('cam');
-        var light = scene.getObjectByName('light');
+        moveDistance = 0.30;
+         sp = scene.getObjectByName('sp');
+         cam = scene.getObjectByName('cam');
+         light = scene.getObjectByName('light');
         if (e.keyCode == '39') 
         {
             if(sp.position.x < 48)
@@ -114,6 +113,7 @@ function render()
             light.position.x += 3;
             count++;
              document.getElementById("myText").innerHTML = count;
+             collision(sphere.position.x,sphere.position.y);
             }
             
           
@@ -129,7 +129,8 @@ function render()
             light.position.x -= 3;
             count++;
          document.getElementById("myText").innerHTML = count;
-                    
+         collision(sphere.position.x,sphere.position.y);
+
                 }
         }
         else if(e.keyCode == '27')
@@ -161,16 +162,43 @@ function createCubes()
     var max=48 , min=-48;
     for (let i = 0; i < 1000; i++) 
     {
-        cubearr[i] = new THREE.Mesh(geometry2, materialtex);
-        cubearr[i].position.x =(Math.random() * (max - min)) + min;
-        cubearr[i].position.y = fo2;
+        cubearr = new THREE.Mesh(geometry2, materialtex);
+        cubearr.position.x =(Math.random() * (max - min)) + min;
+        cubearr.position.y = fo2;
         fo2 = fo2+10;
-        cubes.add(cubearr[i]);
+        cubes.add(cubearr);
 
         scene.add(cubes);
     }
 
 }
+
+function collision(x,y)
+{
+	
+	vector = new THREE.Vector2();
+	
+	vector.set(x,y);
+
+	
+	raycaster = new THREE.Raycaster();
+	
+	raycaster.setFromCamera(vector,camera);
+
+	
+    intersects = raycaster.intersectObjects(cubes.children);
+    
+	
+    if(intersects.length > 0 )
+    {
+		
+        intersects[0].object.scale.set(0,0,0);
+        console.log(x,y);
+		renderer.render(scene,camera);
+	}
+
+
+    };
 
     
 init();
