@@ -24,8 +24,7 @@
     <script src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <div class="buttons">
     <h1>Cubes Game</h1><br>
-	<input type="button" value="Start Game" onclick="location.href='Graphicscubes.html';"><br><br>
-	<input type="button" value="Levels"><br><br>
+	<input type="button" value="Start Game" onclick="location.href='CubesGame.html';"><br><br>
 	<input type="button" value="Exit">
 
 </div>
@@ -48,32 +47,25 @@ var ww = window.innerWidth,
 
 
 function init(){
+	renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(ww, wh);
+    renderer.setClearColor(0xFFFFFF, 1);
+    document.body.appendChild(renderer.domElement);
+    scene = new THREE.Scene();
 
-	/* WEBGL RENDERER */
+    camera = new THREE.PerspectiveCamera(40, ww/wh,1,1000);
+    camera.position.z =  100;
+    camera.position.y = 5;    
+    camera.name = 'cam';
+    camera.lookAt(new THREE.Vector3(0,0,0));
+    scene.add(camera);
 
-	//Create the webGl renderer from Three
-	renderer = new THREE.WebGLRenderer({canvas : document.getElementById('scene')});
-	//Set the background of our scene
-	renderer.setClearColor(0xffffff);
-	//Set the size of my renderer, I want it to be fullscreen
-	renderer.setSize(ww,wh);
+    
+    light = new THREE.PointLight( 0xFFFFFF, 1, 10000 );
+    light.position.set( 0, 20, 50 );
+    light.name = 'light';
+    scene.add( light );  
 
-
-	/* SCENE */
-
-	//Create my scene
-	scene = new THREE.Scene();
-
-
-	/* CAMERA */
-
-	//Create a new Perspective Camera with four parameters
-	
-	camera = new THREE.PerspectiveCamera(100, ww/wh, 0.1, 10000 );
-	//We set our camera at x:0,y:0 and z:500
-	camera.position.set(0, 0, 500);
-	//And finally we add our camera in our scene
-	scene.add(camera);
 
 
    
@@ -99,8 +91,9 @@ function manyCubes(){
 	cubes = new THREE.Object3D();
 
 	/* The Sphere */
-    cubeGeometry = new THREE.BoxGeometry(20, 20, 20);
-
+    cubeGeometry = new THREE.BoxGeometry(5, 5, 5);
+	min = -100;
+	max=100;
 	//Generate 100 random spheres
 	for(var i=0;i<100;i++){
 		cubeMaterial = new THREE.MeshBasicMaterial( {color:new THREE.Color(parseInt(Math.random()*16777216))} );//F8FF12
@@ -111,8 +104,8 @@ function manyCubes(){
 		cube.rotation.y = (Math.random()-.5)*Math.PI;
 		cube.rotation.z = (Math.random()-.5)*Math.PI;
 
-		cube.position.x = (Math.random()-.5)*ww;
-		cube.position.y = (Math.random()-.5)*wh;
+		cube.position.x =(Math.random() * (max - min)) + min;
+  		cube.position.y = (Math.random() * (max - min)) + min;
 		cube.position.z = (Math.random()-.5)*500;
 
 		//Add the new cube in the 3D object
@@ -128,8 +121,8 @@ var animateShperes = function(){
 	requestAnimationFrame(animateShperes);
 	if(moveRight){
 		if(counter<120){
-			cubes.translateY(1);
-			cubes.translateX(1);
+			cubes.translateY(0.1);
+			cubes.translateX(0.1);
 
 			counter++;
 		}
@@ -138,8 +131,8 @@ var animateShperes = function(){
 	}
 	if(!moveRight){
 		if(counter>0){
-			cubes.translateY(-1);
-			cubes.translateX(-1);
+			cubes.translateY(-0.1);
+			cubes.translateX(-0.1);
 			counter--;
 		}
 		else
