@@ -301,7 +301,7 @@ function BG(){
     geometry = new THREE.BoxGeometry(5,5,5);
 
     for(var i=0;i<20;i++){
-        texture = new THREE.MeshBasicMaterial( { color:new THREE.Color(parseInt(Math.random()*16777216)) , transparent: true, opacity: 0.5} );
+        texture = new THREE.MeshBasicMaterial( { color:new THREE.Color(parseInt(Math.random()*16777216)) , transparent: true, opacity: 0.3} );
         cube = new THREE.Mesh(geometry, texture);
         cube.rotation.x = (Math.random()-.5)*Math.PI;
         cube.rotation.y = (Math.random()-.5)*Math.PI;
@@ -318,7 +318,7 @@ function BG(){
     spgeometry = new THREE.SphereGeometry(4, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2);
 
     for(var i=0;i<10;i++){
-        sptexture = new THREE.MeshBasicMaterial( { color:new THREE.Color(parseInt(Math.random()*16777216)) , transparent: true, opacity: 0.5} );
+        sptexture = new THREE.MeshBasicMaterial( { color:new THREE.Color(parseInt(Math.random()*16777216)) , transparent: true, opacity: 0.3} );
         sph = new THREE.Mesh(spgeometry, sptexture);
         sph.rotation.x = (Math.random()-.5)*Math.PI;
         sph.rotation.y = (Math.random()-.5)*Math.PI;
