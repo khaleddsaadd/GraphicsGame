@@ -107,7 +107,7 @@ function text()
  
 
     // Create sphere
-    sphereG =  new THREE.SphereGeometry(4, 100, 100, 0, Math.PI * 2, 0, Math.PI * 2);
+    sphereG =  new THREE.SphereGeometry(4, 100, 100, 0, Math.PI * 2, 0, Math.PI * 2); //()
              
     spherem = new THREE.MeshLambertMaterial({color: 0xff2255});
 
@@ -123,7 +123,7 @@ function text()
     elements.add(sphere);
 
     //Create floor
-    planeG = new THREE.BoxGeometry( 100, 5, 10 );
+    planeG = new THREE.BoxGeometry( 100, 5, 10 ); //(w,h,depth)
     material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
     texture1 = new THREE.TextureLoader().load('texturefloor.jpg');
     texture1.wrapS = THREE.RepeatWrapping;
@@ -178,7 +178,7 @@ function moveSphere(e)
     moveDistance = 0.30;
     sp = scene.getObjectByName('sp');
     cam = scene.getObjectByName('cam');
-    light = scene.getObjectByName('light');
+
     if (e.keyCode == '39') 
     {
         if(sp.position.x < 48)
@@ -186,7 +186,6 @@ function moveSphere(e)
             sp.rotation.z -= moveDistance;
             sp.position.x += 3;
             sp.rotation.x += 3;
-            light.position.x += 3;
             count++;
             document.getElementById("myText").innerHTML = count;
         }
@@ -197,8 +196,7 @@ function moveSphere(e)
         {
             sp.rotation.z += moveDistance;
             sp.position.x-= 3;
-            sp.rotation.x -= 3;
-            light.position.x -= 3;
+            sp.rotation.x -= 3; 
             count++;
             document.getElementById("myText").innerHTML = count;
         }
