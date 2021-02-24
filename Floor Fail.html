@@ -59,9 +59,9 @@
     var Up=60;
     var count=0;
     var flag = true;
-    var speed=1;
+    var speed=0.5;
     var cubearr = [];
-    var num = 100;
+    var num = 10;
      var max=48 , min=-48;       
     var limit = 0;
     var level = 1;
@@ -188,7 +188,6 @@ function moveSphere(e)
             sp.rotation.z -= moveDistance;
             sp.position.x += 3;
             sp.rotation.x += 3;
-            count++;
             document.getElementById("myText").innerHTML = count;
         }
     } 
@@ -199,7 +198,6 @@ function moveSphere(e)
             sp.rotation.z += moveDistance;
             sp.position.x-= 3;
             sp.rotation.x -= 3; 
-            count++;
             document.getElementById("myText").innerHTML = count;
         }
     }
@@ -236,9 +234,6 @@ function checkCollisiontosphere()
 
             if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length())
             {   
-                console.log("Collsion   " + collisionResults.length);
-                console.log("Sphere  "  + directionVector.length());
-                console.log("Cube  "  + collisionResults[0].distance);
                 document.getElementById("myText2").innerHTML = "GAME OVER";
                 flag=false;   
                 document.getElementById('restBTN').style.display="block";
@@ -278,6 +273,7 @@ function checkCollisiontosphere()
                    limit++;
                 console.log(limit);
                 collisionResults[0].object.visible = false; 
+                count++;
                 if (limit == x)
                     {
                         x += 5;
