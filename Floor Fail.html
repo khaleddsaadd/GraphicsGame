@@ -1,0 +1,350 @@
+<canvas id="scene"></canvas>
+<link rel="stylesheet" 
+    href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="lib/three.min.js"></script>
+<script src="lib/OrbitControls.js"></script>
+<html>
+    <style>
+        label
+        {
+            font-weight: bolder;
+            font-size: 30px;
+        }
+        .buttons
+        {
+            position: fixed;
+            top: 20px;
+        }
+        body 
+        {
+            background-color: rgb(89,165,214);
+        }
+        h1 
+        {
+            color:black;
+            font-weight: bolder;
+        }
+        #restBTN 
+        {
+            display: none;
+            width: 150px;  
+            height: 50px;  
+            border-radius: 50px;  
+            color: blue;  
+            font-size: large;
+        }
+        #btndev 
+        {
+            padding-left: 650px;
+
+        }
+    </style>
+    <body>
+        <div class="buttons">
+            <label style="color:red;padding-left: 630px; "><span id="myText2"></span></label><br>
+            <div id="btndev">
+                <button id="restBTN" onclick="location.reload();">Restart Game</button>
+            </div>
+            <h1>Score: <span id="myText"></span></h1>
+            <h1> <span id="Level"></span></h1>
+        </div>
+
+<script>
+    var ww = 1530,
+    wh = 570;
+    var scene;
+    var k=0.02;
+    var Up=60;
+    var count=0;
+    var flag = true;
+    var speed=1;
+    var cubearr = [];
+    var num = 100;
+     var max=48 , min=-48;       
+    var limit = 0;
+    var level = 1;
+    var x = 5;
+function init()                              
+{
+    renderer = new THREE.WebGLRenderer({antialias:true});
+    renderer.setSize(ww, wh);
+    renderer.setClearColor(0xFFFFFF, 1);
+    document.body.appendChild(renderer.domElement);
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(40, ww/wh,1,1000);
+    camera.position.z =  100;
+    camera.position.y = 5;    
+    camera.name = 'cam';
+    camera.lookAt(new THREE.Vector3(0,0,0));
+    scene.add(camera);
+
+    
+    light = new THREE.PointLight( 0xFFFFFF, 1, 10000 );
+    light.position.set( 0, 20, 50 );
+    light.name = 'light';
+    scene.add( light );  
+
+    const loader = new THREE.TextureLoader();
+    const bgTexture = loader.load('s.jpg');
+    scene.background = bgTexture;   
+
+    text();                               
+    createCubes(num);
+    BG();
+    animate();
+    window.addEventListener("keydown", moveSphere);
+    dir();
+    renderer.render(scene,camera);
+};
+function text()
+{
+    elements = new THREE.Object3D();
+    loader = new THREE.CubeTextureLoader();
+    loader.setPath( 'C:/xampp/htdocs/graphics/' );
+
+ 
+
+    // Create sphere
+    sphereG =  new THREE.SphereGeometry(4, 100, 100, 0, Math.PI * 2, 0, Math.PI * 2); //()
+             
+    spherem = new THREE.MeshLambertMaterial({color: 0xff2255});
+
+    texture2 = new THREE.TextureLoader().load('spheretex.jpg');
+              
+    material2 = new THREE.MeshBasicMaterial( { map: texture2 } );
+    sphere = new THREE.Mesh(sphereG, material2);
+           
+    sphere.position.y = -18;
+
+    sphere.name = 'sp';
+
+    elements.add(sphere);
+
+    //Create floor
+    planeG = new THREE.BoxGeometry( 100, 5, 10 ); //(w,h,depth)
+    material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+    texture1 = new THREE.TextureLoader().load('texturefloor.jpg');
+    texture1.wrapS = THREE.RepeatWrapping;
+    texture1.wrapT = THREE.RepeatWrapping;
+    texture1.repeat.set( 100, 10 );
+    material1 = new THREE.MeshBasicMaterial( { map: texture1 } );
+    floor= new THREE.Mesh( planeG, material1 );
+    floor.position.y = -25; 
+    floor.name = ("floor");
+    elements.add(floor);
+    scene.add(elements);         
+            
+}; 
+function createCubes(x)
+{
+    document.getElementById("Level").innerHTML = "Level 1";
+    geometry2 = new THREE.BoxGeometry(5,5,5);
+    texture = new THREE.TextureLoader().load( 'cb.png' );
+    materialtex = new THREE.MeshBasicMaterial( { map: texture } );
+   
+    for (let i = 0; i < x; i++)   
+    {
+        cubearr[i] = new THREE.Mesh(geometry2, materialtex);
+        cubearr[i].position.x =(Math.random() * (max - min)) + min;
+        cubearr[i].position.y = Up;
+        Up = Up+10;
+        scene.add(cubearr[i]);        
+    }
+    renderer.render(scene,camera);
+} 
+    
+    
+   
+function dir() 
+{
+    if (flag == false)
+    {
+        return;   
+    }
+    requestAnimationFrame(dir);
+    sphere.position.y +=speed;
+    camera.position.y +=speed; 
+    floor.position.y+=speed;
+    cubesbg.position.y+=speed;
+    spheresbg.position.y+=speed;
+   checkCollisiontosphere();
+   // collisionWithFloor();
+    checkCollisiontofloor();
+    renderer.render(scene, camera);
+}
+function moveSphere(e)                 
+{
+    moveDistance = 0.30;
+    sp = scene.getObjectByName('sp');
+    cam = scene.getObjectByName('cam');
+
+    if (e.keyCode == '39') 
+    {
+        if(sp.position.x < 48)
+        {
+            sp.rotation.z -= moveDistance;
+            sp.position.x += 3;
+            sp.rotation.x += 3;
+            count++;
+            document.getElementById("myText").innerHTML = count;
+        }
+    } 
+    else if (e.keyCode == '37')   
+    {
+        if(sp.position.x > -48)   
+        {
+            sp.rotation.z += moveDistance;
+            sp.position.x-= 3;
+            sp.rotation.x -= 3; 
+            count++;
+            document.getElementById("myText").innerHTML = count;
+        }
+    }
+    else if(e.keyCode == '27')
+    {
+        if (flag)
+        {
+            flag = false;
+        }
+        else
+        {
+            flag = true;
+            dir();
+        }
+    }     
+};
+window.addEventListener("keydown", moveSphere);
+
+function checkCollisiontosphere() 
+{
+
+    
+        var Sphere = scene.getObjectByName('sp');
+        var originPoint = Sphere.position.clone();
+
+        for (var vertexIndex = 0; vertexIndex < Sphere.geometry.vertices.length; vertexIndex++) 
+        {
+            var localVertex = Sphere.geometry.vertices[vertexIndex].clone();
+            var globalVertex = localVertex.applyMatrix4(Sphere.matrix); // update the object's position
+            var directionVector = globalVertex.sub(Sphere.position); // ba3mel subtract men globalvertex men sphere position
+
+            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize()); //Convert this vector to a unit vector - that is, sets it equal to a vector with the same direction as this one, but length 1.
+            var collisionResults = ray.intersectObjects(cubearr);
+
+            if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length())
+            {   
+                console.log("Collsion   " + collisionResults.length);
+                console.log("Sphere  "  + directionVector.length());
+                console.log("Cube  "  + collisionResults[0].distance);
+                document.getElementById("myText2").innerHTML = "GAME OVER";
+                flag=false;   
+                document.getElementById('restBTN').style.display="block";
+            } 
+        }
+}
+
+     function collisionWithFloor()
+    {
+        for(i = 0 ; i < cubearr.length ; i++ )
+            {
+                var cubespos = new THREE.Vector3();
+				cubespos.setFromMatrixPosition(cubearr[i].matrixWorld);
+            if(cubespos.distanceTo(sphere.position) <= 0.3)
+                {
+                    console.log('hits');
+                }
+            }
+    }
+    
+    
+    
+    function checkCollisiontofloor() {
+     
+    
+        var cube = scene.getObjectByName('floor');
+        var originPoint = cube.position.clone();
+
+        for (var vertexIndex = 0; vertexIndex < cube.geometry.vertices.length; vertexIndex++) {
+            var localVertex = cube.geometry.vertices[vertexIndex].clone();
+            var globalVertex = localVertex.applyMatrix4(cube.matrix);
+            var directionVector = globalVertex.sub(cube.position);
+
+            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+            var collisionResults = ray.intersectObjects(cubearr);
+            if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+                   limit++;
+                console.log(limit);
+                collisionResults[0].object.visible = false; 
+                if (limit == x)
+                    {
+                        x += 5;
+                        createCubes(num+=5);
+                        level++;
+                        var l = "level";
+                        var final = (l + "  " + level);
+                        console.log (final);
+                        document.getElementById("Level").innerHTML = final;
+                        speed+= 0.1;
+                    }
+            }
+        
+    }
+ }
+function BG(){
+
+    cubesbg = new THREE.Object3D();
+
+    geometry = new THREE.BoxGeometry(5,5,5);
+
+    for(var i=0;i<20;i++){
+        texture = new THREE.MeshBasicMaterial( { color:new THREE.Color(parseInt(Math.random()*16777216)) , transparent: true, opacity: 0.3} );
+        cube = new THREE.Mesh(geometry, texture);
+        cube.rotation.x = (Math.random()-.5)*Math.PI;
+        cube.rotation.y = (Math.random()-.5)*Math.PI;
+        cube.rotation.z = (Math.random()-.5)*Math.PI;
+
+        cube.position.x =(Math.random() * (max - min)) + min;
+        cube.position.y = (Math.random() * (max - min)) + min;
+        cube.position.z = -20;
+        cubesbg.add(cube);
+    }
+    scene.add(cubesbg);
+
+    spheresbg = new THREE.Object3D();
+    spgeometry = new THREE.SphereGeometry(4, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2);
+
+    for(var i=0;i<10;i++){
+        sptexture = new THREE.MeshBasicMaterial( { color:new THREE.Color(parseInt(Math.random()*16777216)) , transparent: true, opacity: 0.3} );
+        sph = new THREE.Mesh(spgeometry, sptexture);
+        sph.rotation.x = (Math.random()-.5)*Math.PI;
+        sph.rotation.y = (Math.random()-.5)*Math.PI;
+        sph.rotation.z = (Math.random()-.5)*Math.PI;
+
+        sph.position.x =(Math.random() * (max - min)) + min;
+        sph.position.y = (Math.random() * (max - min)) + min;
+        spheresbg.add(sph);
+    }
+    scene.add(spheresbg);
+
+
+};
+function animate()
+{
+    if (flag == false)
+    {
+        return;   
+    }
+    requestAnimationFrame(animate);
+    cubesbg.rotation.z +=0.01;
+    spheresbg.rotation.z -=0.01;
+    renderer.render(scene, camera);
+}
+
+
+init();
+</script>
+</body>
+</html>
